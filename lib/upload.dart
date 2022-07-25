@@ -65,16 +65,16 @@ class _UploadState extends State<Upload> {
           content:
               Text('Estimated time of transcription: $estimatedTime' + 's')));
 
-      // var uri = Uri.parse(kUrl + '/transcript/');
-      // var request = new MultipartRequest("POST", uri);
-      // var multipartFile = new MultipartFile('file', stream, length,
-      //     filename: basename(mp3File));
+      var uri = Uri.parse(kUrl + '/transcript/');
+      var request = new MultipartRequest("POST", uri);
+      var multipartFile = new MultipartFile('file', stream, length,
+          filename: basename(mp3File));
 
-      // request.files.add(multipartFile);
-      // var response = await request.send();
-      // print('status code: {$response.statusCode}');
+      request.files.add(multipartFile);
+      var response = await request.send();
+      print('status code: {$response.statusCode}');
 
-      await Future.delayed(Duration(seconds: 5));
+      // await Future.delayed(Duration(seconds: 5));
 
       setMidiFileValue(kUrl +
           "/static/midi/" +
