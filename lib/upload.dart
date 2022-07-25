@@ -89,12 +89,9 @@ class _UploadState extends State<Upload> {
 
     // implement build
     return Scaffold(
-      // backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
         title: Text("NeuTranscriptor"),
         elevation: 0,
-
-        // titleTextStyle: Theme.of(context).textTheme,
       ),
       body: SafeArea(
         child: Container(
