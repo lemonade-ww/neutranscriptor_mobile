@@ -18,7 +18,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.1+1
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.5"
 
 dependencies:
   flutter:
@@ -47,14 +47,27 @@ flutter_icons:
 
   # The following section is specific to Flutter.
 flutter:
-  #   fonts:
-  #     - family: Raleway
-  #       fonts:
-  #         - asset: fonts/Raleway-Regular.ttf
-  #         - asset: fonts/Raleway-Bold.ttf
-  #           weight: 700
-  #         - asset: fonts/Raleway-Medium.ttf
-  #           weight: 500
+  fonts:
+    - family: Raleway
+      fonts:
+        # - asset: assets/fonts/Raleway-Thin.ttf
+        #   weight: 100
+        # - asset: assets/fonts/Raleway-ExtraLight.ttf
+        #   weight: 200
+        # - asset: assets/fonts/Raleway-Light.ttf
+        #   weight: 300
+        - asset: assets/fonts/Raleway-Regular.ttf
+        - asset: assets/fonts/Raleway-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Raleway-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Raleway-Bold.ttf
+          weight: 700
+        # - asset: assets/fonts/Raleway-ExtraBold.ttf
+        #   weight: 800
+        # - asset: assets/fonts/Raleway-Heavy.ttf
+        #   weight: 900
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

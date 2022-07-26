@@ -65,8 +65,12 @@ class _UploadState extends State<Upload> {
     void showMsg(String text) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(text),
+          content: Text(
+            text,
+            style: TextStyle(fontFamily: 'Raleway'),
+          ),
           duration: Duration(milliseconds: 2000),
+
           // behavior: SnackBarBehavior.floating,
         ),
       );
@@ -127,40 +131,49 @@ class _UploadState extends State<Upload> {
         title: Text("NeuTranscriptor"),
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
+        titleTextStyle: TextStyle(
+          fontFamily: 'Raleway',
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          if (!transcribing) {
-            final prefs = await SharedPreferences.getInstance();
-            server = await showDialog(
-              context: context,
-              builder: (_) => SimpleDialog(
-                title: const Text('Select a webservice'),
-                children: <Widget>[
-                  SimpleDialogOption(
+          try {
+            if (!transcribing) {
+              final prefs = await SharedPreferences.getInstance();
+              server = await showDialog(
+                context: context,
+                builder: (_) => SimpleDialog(
+                  title: const Text('Select a webservice'),
+                  children: <Widget>[
+                    SimpleDialogOption(
+                        onPressed: () {
+                          Navigator.pop(context, serverList[0]);
+                          showMsg('Webservice changed to: ${serverList[0]}');
+                        },
+                        child: prefs.getString('server') == serverList[0]
+                            ? Text(serverList[0] + ' (current)')
+                            : Text(serverList[0])),
+                    SimpleDialogOption(
                       onPressed: () {
-                        Navigator.pop(context, serverList[0]);
-                        showMsg('Webservice changed to: ${serverList[0]}');
+                        Navigator.pop(context, serverList[1]);
+                        showMsg('Webservice changed to: ${serverList[1]}');
                       },
-                      child: prefs.getString('server') == serverList[0]
-                          ? Text(serverList[0] + ' (current)')
-                          : Text(serverList[0])),
-                  SimpleDialogOption(
-                    onPressed: () {
-                      Navigator.pop(context, serverList[1]);
-                      showMsg('Webservice changed to: ${serverList[1]}');
-                    },
-                    child: prefs.getString('server') == serverList[1]
-                        ? Text(serverList[1] + ' (current)')
-                        : Text(serverList[1]),
-                  ),
-                ],
-              ),
-            );
+                      child: prefs.getString('server') == serverList[1]
+                          ? Text(serverList[1] + ' (current)')
+                          : Text(serverList[1]),
+                    ),
+                  ],
+                ),
+              );
 
-            prefs.setString('server', server);
-          } else {
-            showMsg('Transcription in process. Can\'t change the webservice');
+              prefs.setString('server', server);
+            } else {
+              showMsg('Transcription in process. Can\'t change the webservice');
+            }
+          } catch (e) {
+            null;
           }
         },
         backgroundColor: Colors.white,

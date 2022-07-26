@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'NeuTranscriptor',
       theme: ThemeData(
+        fontFamily: 'Raleway',
         brightness: Brightness.light,
         primaryColor: Color.fromRGBO(39, 86, 137, 1),
         scaffoldBackgroundColor: Color.fromRGBO(39, 86, 137, 1),
@@ -25,10 +26,12 @@ class MyApp extends StatelessWidget {
           button: TextStyle(
             fontSize: 17,
             color: Colors.white,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
       darkTheme: ThemeData(
+        fontFamily: 'Raleway',
         brightness: Brightness.dark,
         primaryColor: Color.fromRGBO(18, 18, 18, 1),
         scaffoldBackgroundColor: Colors.black,
@@ -39,6 +42,7 @@ class MyApp extends StatelessWidget {
           button: TextStyle(
             fontSize: 17,
             color: Colors.white,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
