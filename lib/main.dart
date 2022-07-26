@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.system,
       home: Upload(),
     );
   }
