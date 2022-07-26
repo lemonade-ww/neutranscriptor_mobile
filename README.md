@@ -1,1 +1,1 @@
-# NeuTranscriptor (Mobile App) by Henry3510
+# NeuTranscriptor-Mobile by Henry3510
