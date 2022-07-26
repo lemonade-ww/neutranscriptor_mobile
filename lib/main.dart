@@ -30,10 +30,10 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        primaryColor: Colors.black,
+        primaryColor: Color.fromRGBO(18, 18, 18, 1),
         scaffoldBackgroundColor: Colors.black,
         colorScheme: ColorScheme.dark().copyWith(
-          primary: Colors.black,
+          primary: Color.fromRGBO(18, 18, 18, 1),
         ),
         textTheme: const TextTheme(
           button: TextStyle(
