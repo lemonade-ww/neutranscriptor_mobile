@@ -221,7 +221,7 @@ class _UploadState extends State<Upload> {
                           margin: const EdgeInsets.all(6.0),
                           child: Text(
                             'Pick an MP3 file',
-                            style: Theme.of(context).textTheme.button,
+                            style: Theme.of(context).textTheme.labelLarge,
                           ),
                         ),
                       ],
@@ -278,7 +278,7 @@ class _UploadState extends State<Upload> {
                     },
                     label: Text(
                       'Transcribe',
-                      style: Theme.of(context).textTheme.button,
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     icon: Icon(
                       Icons.file_upload,
@@ -313,7 +313,7 @@ class _UploadState extends State<Upload> {
                       onPressed: downLoadFile,
                       label: Text(
                         'Download',
-                        style: Theme.of(context).textTheme.button,
+                        style: Theme.of(context).textTheme.labelLarge,
                       ),
                       icon: Icon(
                         Icons.file_download,

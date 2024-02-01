@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
           primary: Color.fromRGBO(39, 86, 137, 1),
         ),
         textTheme: TextTheme(
-          button: TextStyle(
+          labelLarge: TextStyle(
             fontSize: 17,
             color: Colors.white,
             fontWeight: FontWeight.w500,
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           primary: Color.fromRGBO(18, 18, 18, 1),
         ),
         textTheme: const TextTheme(
-          button: TextStyle(
+          labelLarge: TextStyle(
             fontSize: 17,
             color: Colors.white,
             fontWeight: FontWeight.w500,
