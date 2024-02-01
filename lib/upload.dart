@@ -25,7 +25,7 @@ class _UploadState extends State<Upload> {
   var transcribed = false;
   var transcribing = false;
 
-  List<String> serverList = ['http://40.73.3.5:8080/', 'No server'];
+  List<String> serverList = ['http://40.73.3.5:9075/', 'No server'];
 
   @override
   void initState() {
