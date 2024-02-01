@@ -143,6 +143,7 @@ class _UploadState extends State<Upload> {
               server = await showDialog(
                 context: context,
                 builder: (_) => SimpleDialog(
+                  backgroundColor: Colors.white,
                   title: const Text('Select a webservice'),
                   children: <Widget>[
                     SimpleDialogOption(
@@ -165,7 +166,6 @@ class _UploadState extends State<Upload> {
                   ],
                 ),
               );
-
               prefs.setString('server', server);
             } else {
               showMsg('Transcription in process. Can\'t change the webservice');
@@ -189,18 +189,16 @@ class _UploadState extends State<Upload> {
                 SizedBox(
                   height: 250,
                   width: 250,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsets>(
-                          EdgeInsets.all(10)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          side: BorderSide(
-                            color: Colors.white,
-                            width: 2,
-                          ),
-                        ),
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      side: BorderSide(
+                        color: Colors.white,
+                        width: 2,
                       ),
                     ),
                     child: Column(
@@ -248,18 +246,16 @@ class _UploadState extends State<Upload> {
                 SizedBox(height: 16),
                 SizedBox(
                   width: 200,
-                  child: ElevatedButton.icon(
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsets>(
-                          EdgeInsets.all(10)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          side: BorderSide(
-                            color: Colors.white,
-                            width: 2,
-                          ),
-                        ),
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      side: BorderSide(
+                        color: Colors.white,
+                        width: 2,
                       ),
                     ),
                     onPressed: () {
@@ -284,7 +280,7 @@ class _UploadState extends State<Upload> {
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+                // SizedBox(height: 16),
                 if (transcribing)
                   CircularProgressIndicator(
                     value: _progBarValue,
@@ -293,7 +289,7 @@ class _UploadState extends State<Upload> {
                 if (transcribed)
                   SizedBox(
                     width: 200,
-                    child: ElevatedButton.icon(
+                    child: OutlinedButton.icon(
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all<EdgeInsets>(
                             EdgeInsets.all(10)),

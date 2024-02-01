@@ -19,9 +19,9 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
         primaryColor: Color.fromRGBO(39, 86, 137, 1),
         scaffoldBackgroundColor: Color.fromRGBO(39, 86, 137, 1),
-        colorScheme: ColorScheme.light().copyWith(
-          primary: Color.fromRGBO(39, 86, 137, 1),
-        ),
+        // colorScheme: ColorScheme.light().copyWith(
+        //   primary: Color.fromRGBO(39, 86, 137, 1),
+        // ),
         textTheme: TextTheme(
           labelLarge: TextStyle(
             fontSize: 17,
