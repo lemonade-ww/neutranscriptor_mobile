@@ -12,8 +12,6 @@ class Upload extends StatefulWidget {
   _UploadState createState() => _UploadState();
 }
 
-// const kUrl = 'http://40.73.3.5:8080/';
-
 class _UploadState extends State<Upload> {
   String server = '';
   String name = '';
