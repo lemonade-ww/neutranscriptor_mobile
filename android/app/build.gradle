@@ -23,8 +23,8 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.henry3510.neutranscriptor_mobile"
-    compileSdkVersion flutter.compileSdkVersion
+    namespace "com.example.neutranscriptor_mobile"
+    compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -42,7 +42,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.henry3510.neutranscriptor_mobile"
+        applicationId "com.example.neutranscriptor_mobile"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
