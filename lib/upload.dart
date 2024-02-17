@@ -23,7 +23,11 @@ class _UploadState extends State<Upload> {
   var transcribed = false;
   var transcribing = false;
 
-  List<String> serverList = ['http://40.73.3.5:9075/', 'No server'];
+  List<String> serverList = [
+    'http://40.73.3.5:9075',
+    'http://192.168.0.102:9075',
+    'Debug Only'
+  ];
 
   @override
   void initState() {
@@ -33,9 +37,11 @@ class _UploadState extends State<Upload> {
 
   Future initServer() async {
     final prefs = await SharedPreferences.getInstance();
-    if (prefs.getString('server') == '') {
-      server = serverList[0];
-      prefs.setString('server', server);
+    if (server == '') {
+      setState(() {
+        server = serverList[serverList.length - 1];
+        prefs.setString('server', server);
+      });
     }
   }
 
@@ -53,9 +59,16 @@ class _UploadState extends State<Upload> {
 
   Future downLoadFile() async {
     if (midiFile != '') {
-      print("MIDI file: " + midiFile);
       launchUrl(Uri.parse(midiFile));
     }
+  }
+
+  reset() {
+    setState(() {
+      transcribing = false;
+      transcribed = false;
+      _progBarValue = 0;
+    });
   }
 
   @override
@@ -75,19 +88,20 @@ class _UploadState extends State<Upload> {
     }
 
     uploadMp3FileToServer(String mp3File) async {
-      File mp3FileContent = File(mp3File);
-      final stream =
-          new ByteStream(DelegatingStream.typed(mp3FileContent.openRead()));
-      final length = await mp3FileContent.length();
-
-      final estimatedTime = length ~/ 40000;
-
       setState(() {
         _progBarValue = null;
       });
-      if (server.startsWith('http')) {
+      if (!server.startsWith('Debug')) {
+        File mp3FileContent = File(mp3File);
+        final stream =
+            new ByteStream(DelegatingStream.typed(mp3FileContent.openRead()));
+        final length = await mp3FileContent.length();
+        String midiFileName =
+            mp3File.split("/").last.replaceFirst('.mp3', '.mid');
+        String midiFilePath = server + "/static/midi/" + midiFileName;
+
         try {
-          var uri = Uri.parse(server + '/transcript/');
+          var uri = Uri.parse(server + '/transcription/');
           var request = new MultipartRequest("POST", uri);
           var multipartFile = new MultipartFile('file', stream, length,
               filename: basename(mp3File));
@@ -95,12 +109,10 @@ class _UploadState extends State<Upload> {
           request.files.add(multipartFile);
 
           var response = await request.send();
-          showMsg('Estimated time of transcription: $estimatedTime' + 's');
+          // showMsg('Estimated time of transcription: $estimatedTime' + 's');
 
           print('Status code: {$response.statusCode}');
-          setMidiFileValue(server +
-              "/static/midi/" +
-              mp3File.split("/").last.replaceFirst('.mp3', '.mid'));
+          setMidiFileValue(midiFilePath);
           transcribed = true;
           transcribing = false;
           showMsg('Transciption finished!');
@@ -112,8 +124,8 @@ class _UploadState extends State<Upload> {
           });
         }
       } else {
-        showMsg('Wait for 5 seconds...');
-        await Future.delayed(Duration(seconds: 5));
+        showMsg('Wait for 3 seconds...');
+        await Future.delayed(Duration(seconds: 3));
         transcribed = true;
         transcribing = false;
         showMsg('Transciption finished!');
@@ -143,32 +155,30 @@ class _UploadState extends State<Upload> {
               server = await showDialog(
                 context: context,
                 builder: (_) => SimpleDialog(
-                  backgroundColor: Colors.white,
-                  title: const Text('Select a webservice'),
+                  title: const Text('Select a Server'),
                   children: <Widget>[
-                    SimpleDialogOption(
+                    for (var server in serverList)
+                      SimpleDialogOption(
                         onPressed: () {
-                          Navigator.pop(context, serverList[0]);
-                          showMsg('Webservice changed to: ${serverList[0]}');
+                          Navigator.pop(context, server);
+                          setState(() {
+                            server = server;
+                          });
+                          showMsg('Server changed to: $server');
                         },
-                        child: prefs.getString('server') == serverList[0]
-                            ? Text(serverList[0] + ' (current)')
-                            : Text(serverList[0])),
-                    SimpleDialogOption(
-                      onPressed: () {
-                        Navigator.pop(context, serverList[1]);
-                        showMsg('Webservice changed to: ${serverList[1]}');
-                      },
-                      child: prefs.getString('server') == serverList[1]
-                          ? Text(serverList[1] + ' (current)')
-                          : Text(serverList[1]),
-                    ),
+                        child: prefs.getString('server') == server
+                            ? Text(
+                                '$server (Current)',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              )
+                            : Text(server),
+                      ),
                   ],
                 ),
               );
               prefs.setString('server', server);
             } else {
-              showMsg('Transcription in process. Can\'t change the webservice');
+              showMsg('Transcription in process. Cannot change the server');
             }
           } catch (e) {
             null;
@@ -176,147 +186,180 @@ class _UploadState extends State<Upload> {
         },
         backgroundColor: Colors.white,
         foregroundColor: Theme.of(context).scaffoldBackgroundColor,
-        child: const Icon(Icons.dns_rounded),
+        child: const Icon(Icons.settings_rounded),
       ),
       body: SafeArea(
         child: Container(
           // alignment: Alignment.bottomCenter,
           padding: EdgeInsets.all(16),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 250,
-                  width: 250,
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).scaffoldBackgroundColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      side: BorderSide(
-                        color: Colors.white,
-                        width: 2,
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.all(6.0),
-                          child: Icon(
-                            Icons.music_note,
-                            color: Colors.white,
-                            size: 64,
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.all(6.0),
-                          child: Text(
-                            'Pick an MP3 file',
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
-                        ),
-                      ],
-                    ),
-                    onPressed: () async {
-                      FilePickerResult? result =
-                          await FilePicker.platform.pickFiles(
-                        type: FileType.custom,
-                        allowedExtensions: ['mp3'],
-                      );
-                      setState(
-                        () {
-                          if (result != null) {
-                            // transcribing = false;
-                            transcribed = false;
-                            mp3File = result.files.single.path.toString();
-                            name = result.files.single.name.toString();
-                            _progBarValue = 0;
-                            showMsg('$name loaded!');
-                          }
-                        },
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 16),
-                SizedBox(
-                  width: 200,
-                  child: OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).scaffoldBackgroundColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      side: BorderSide(
-                        color: Colors.white,
-                        width: 2,
-                      ),
-                    ),
-                    onPressed: () {
-                      if (transcribing) {
-                        showMsg('Transcription in process. Please wait.');
-                      } else if (transcribed) {
-                        showMsg('Transcription finished!');
-                      } else if (mp3File == '') {
-                        showMsg('Please pick an MP3 file first!');
-                      } else {
-                        transcribing = true;
-                        uploadMp3FileToServer(mp3File);
-                      }
-                    },
-                    label: Text(
-                      'Transcribe',
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                    icon: Icon(
-                      Icons.file_upload,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                // SizedBox(height: 16),
-                if (transcribing)
-                  CircularProgressIndicator(
-                    value: _progBarValue,
-                    color: Colors.white,
-                  ),
-                if (transcribed)
-                  SizedBox(
-                    width: 200,
-                    child: OutlinedButton.icon(
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all<EdgeInsets>(
-                            EdgeInsets.all(10)),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+          child: Stack(
+            children: [
+              Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 250,
+                        width: 250,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                             side: BorderSide(
                               color: Colors.white,
                               width: 2,
                             ),
                           ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.music_note,
+                                color: Colors.white,
+                                size: 64,
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                name.isEmpty
+                                    ? 'Pick an MP3 file'
+                                    : 'File Loaded:\n$name',
+                                style: Theme.of(context).textTheme.labelLarge,
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                          onPressed: () async {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles(
+                              type: FileType.custom,
+                              allowedExtensions: ['mp3'],
+                            );
+                            setState(
+                              () {
+                                if (result != null) {
+                                  reset();
+                                  mp3File = result.files.single.path.toString();
+                                  name = result.files.single.name.toString();
+                                  showMsg('$name loaded!');
+                                }
+                              },
+                            );
+                          },
                         ),
                       ),
-                      onPressed: downLoadFile,
-                      label: Text(
-                        'Download',
-                        style: Theme.of(context).textTheme.labelLarge,
+                      SizedBox(height: 16),
+                      Container(
+                        width: 200,
+                        child: OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            side: BorderSide(
+                              color: Colors.white,
+                              width: 2,
+                            ),
+                          ),
+                          onPressed: () {
+                            if (transcribing) {
+                              showMsg('Transcription in process. Please wait.');
+                            } else if (transcribed) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Restart Confirmation'),
+                                    content:
+                                        Text('Transcription finished. Do you really want to restart?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text('Yes'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          reset();
+                                          transcribing = true;
+                                          uploadMp3FileToServer(mp3File);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else if (mp3File == '') {
+                              showMsg('Please pick an MP3 file first!');
+                            } else {
+                              transcribing = true;
+                              uploadMp3FileToServer(mp3File);
+                            }
+                          },
+                          label: Text(
+                            'Transcribe',
+                            style: Theme.of(context).textTheme.labelLarge,
+                          ),
+                          icon: Icon(
+                            Icons.file_upload,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                      icon: Icon(
-                        Icons.file_download,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+                      SizedBox(height: 16),
+                      if (transcribing && !transcribed)
+                        Container(
+                          height: 48,
+                          width: 48,
+                          child: CircularProgressIndicator(
+                            value: _progBarValue,
+                            color: Colors.white,
+                          ),
+                        ),
+                      if (transcribed)
+                        Container(
+                            width: 200,
+                            child: OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                side: BorderSide(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                              ),
+                              onPressed: downLoadFile,
+                              label: Text(
+                                'Download',
+                                style: Theme.of(context).textTheme.labelLarge,
+                              ),
+                              icon: Icon(
+                                Icons.file_download,
+                                color: Colors.white,
+                              ),
+                            )),
+                    ],
+                  )),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  'Server: $server',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+            ],
           ),
         ),
       ),

@@ -4,6 +4,15 @@ import 'package:flutter/services.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemStatusBarContrastEnforced: true,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarDividerColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark));
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
+      overlays: [SystemUiOverlay.top]);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((value) => runApp(MyApp()));
@@ -19,30 +28,24 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
         primaryColor: Color.fromRGBO(39, 86, 137, 1),
         scaffoldBackgroundColor: Color.fromRGBO(39, 86, 137, 1),
-        // colorScheme: ColorScheme.light().copyWith(
-        //   primary: Color.fromRGBO(39, 86, 137, 1),
-        // ),
         textTheme: TextTheme(
           labelLarge: TextStyle(
-            fontSize: 17,
+            fontSize: 16,
             color: Colors.white,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
       darkTheme: ThemeData(
         fontFamily: 'Raleway',
         brightness: Brightness.dark,
-        primaryColor: Color.fromRGBO(18, 18, 18, 1),
+        primaryColor: Colors.black,
         scaffoldBackgroundColor: Colors.black,
-        colorScheme: ColorScheme.dark().copyWith(
-          primary: Color.fromRGBO(18, 18, 18, 1),
-        ),
-        textTheme: const TextTheme(
+        textTheme: TextTheme(
           labelLarge: TextStyle(
-            fontSize: 17,
+            fontSize: 16,
             color: Colors.white,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
