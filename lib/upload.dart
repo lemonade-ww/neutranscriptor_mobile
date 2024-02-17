@@ -1,6 +1,6 @@
-import 'package:async/async.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'dart:io';
 import 'package:http/http.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -93,8 +93,7 @@ class _UploadState extends State<Upload> {
       });
       if (!server.startsWith('Debug')) {
         File mp3FileContent = File(mp3File);
-        final stream =
-            new ByteStream(DelegatingStream.typed(mp3FileContent.openRead()));
+        final stream = new ByteStream(mp3FileContent.openRead());
         final length = await mp3FileContent.length();
         String midiFileName =
             mp3File.split("/").last.replaceFirst('.mp3', '.mid');
@@ -147,46 +146,77 @@ class _UploadState extends State<Upload> {
           fontWeight: FontWeight.w600,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          try {
-            if (!transcribing) {
-              final prefs = await SharedPreferences.getInstance();
-              server = await showDialog(
-                context: context,
-                builder: (_) => SimpleDialog(
-                  title: const Text('Select a Server'),
-                  children: <Widget>[
-                    for (var server in serverList)
-                      SimpleDialogOption(
-                        onPressed: () {
-                          Navigator.pop(context, server);
-                          setState(() {
-                            server = server;
-                          });
-                          showMsg('Server changed to: $server');
-                        },
-                        child: prefs.getString('server') == server
-                            ? Text(
-                                '$server (Current)',
-                                style: TextStyle(fontWeight: FontWeight.w600),
-                              )
-                            : Text(server),
-                      ),
-                  ],
-                ),
-              );
-              prefs.setString('server', server);
-            } else {
-              showMsg('Transcription in process. Cannot change the server');
-            }
-          } catch (e) {
-            null;
-          }
-        },
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
         backgroundColor: Colors.white,
         foregroundColor: Theme.of(context).scaffoldBackgroundColor,
-        child: const Icon(Icons.settings_rounded),
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.settings_rounded),
+            label: 'Select Server',
+            onTap: () async {
+              try {
+                if (!transcribing) {
+                  final prefs = await SharedPreferences.getInstance();
+                  server = await showDialog(
+                    context: context,
+                    builder: (_) => SimpleDialog(
+                      title: const Text('Select a Server'),
+                      children: <Widget>[
+                        for (var server in serverList)
+                          SimpleDialogOption(
+                            onPressed: () {
+                              Navigator.pop(context, server);
+                              setState(() {
+                                server = server;
+                              });
+                              showMsg('Server changed to: $server');
+                            },
+                            child: prefs.getString('server') == server
+                                ? Text(
+                                    '$server (Current)',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  )
+                                : Text(server),
+                          ),
+                      ],
+                    ),
+                  );
+                  prefs.setString('server', server);
+                } else {
+                  showMsg('Transcription in process. Cannot change the server');
+                }
+              } catch (e) {
+                null;
+              }
+            },
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.info_outline_rounded),
+            label: 'Info',
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Information'),
+                    content: Text(
+                        'Made by Henry Wang.\n© 2023 Henry Wang. All rights reserved.'),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: Container(
@@ -276,8 +306,8 @@ class _UploadState extends State<Upload> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Text('Restart Confirmation'),
-                                    content:
-                                        Text('Transcription finished. Do you really want to restart?'),
+                                    content: Text(
+                                        'Transcription finished. Do you really want to restart?'),
                                     actions: <Widget>[
                                       TextButton(
                                         child: Text('Cancel'),

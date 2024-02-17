@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData(
         fontFamily: 'Raleway',
         brightness: Brightness.dark,
-        primaryColor: Colors.black,
+        primaryColor: Color.fromRGBO(25, 28, 30, 1),
         scaffoldBackgroundColor: Colors.black,
         textTheme: TextTheme(
           labelLarge: TextStyle(

@@ -32,11 +32,14 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   dependency_validator: ^3.2.2
   shared_preferences: ^2.0.15
+  flutter_speed_dial:
 
+  path: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  neutranscriptor_mobile: any
 flutter_icons:
   android: "launcher_icon"
   ios: true
@@ -50,23 +53,24 @@ flutter:
   fonts:
     - family: Raleway
       fonts:
-        # - asset: assets/fonts/Raleway-Thin.ttf
-        #   weight: 100
-        # - asset: assets/fonts/Raleway-ExtraLight.ttf
-        #   weight: 200
-        # - asset: assets/fonts/Raleway-Light.ttf
-        #   weight: 300
+        - asset: assets/fonts/Raleway-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Raleway-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Raleway-Light.ttf
+          weight: 300
         - asset: assets/fonts/Raleway-Regular.ttf
+          weight: 400
         - asset: assets/fonts/Raleway-Medium.ttf
           weight: 500
         - asset: assets/fonts/Raleway-SemiBold.ttf
           weight: 600
         - asset: assets/fonts/Raleway-Bold.ttf
           weight: 700
-        # - asset: assets/fonts/Raleway-ExtraBold.ttf
-        #   weight: 800
-        # - asset: assets/fonts/Raleway-Heavy.ttf
-        #   weight: 900
+        - asset: assets/fonts/Raleway-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Raleway-Heavy.ttf
+          weight: 900
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
